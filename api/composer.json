@@ -1,0 +1,7 @@
+{
+    "name" : "api-lumen",
+    "description": "API for testing Laravel Lumen Framework",
+    "keywords": ["framework","api","laravel","lumen"],
+    "license": "MIT",
+    "type": "project"
+}
