@@ -24,7 +24,7 @@ services:
       - ./api:/var/www/html
       - /var/www/vendor
     ports:
-      - "9000:9000"
+      - "8000:8000"
     networks:
       - private-network
     depends_on:

@@ -13,7 +13,14 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 && php -r "unlink('composer-setup.php');"
 
 COPY ./api/composer.json /var/www/html/composer.json
+COPY ./api/composer.lock /var/www/html/composer.lock
 
 WORKDIR /var/www/html
 
-RUN composer install
+RUN composer install --no-scripts --no-autoloader
+
+COPY ./api /var/www/html
+
+RUN composer dump-autoload --optimize
+
+ENTRYPOINT [ "php", "-S", "0.0.0.0:8000", "-t", "public"]
