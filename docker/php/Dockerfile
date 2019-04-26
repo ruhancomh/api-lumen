@@ -1,5 +1,9 @@
 FROM php:7.3.4-fpm
 
+ARG USER=app
+
+RUN useradd -ms /bin/bash $USER
+
 RUN apt-get update -y && apt-get install -y zip libzip-dev unzip git libmcrypt-dev mysql-client \
     && pecl install mcrypt-1.0.2 \
     && docker-php-ext-enable mcrypt \
@@ -12,6 +16,10 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
 && php -r "unlink('composer-setup.php');"
 
+RUN chown -R $USER ~/.composer/
+
+USER $USER
+
 COPY ./api/composer.json /var/www/html/composer.json
 COPY ./api/composer.lock /var/www/html/composer.lock
 
@@ -21,6 +29,10 @@ RUN composer install --no-scripts --no-autoloader
 
 COPY ./api /var/www/html
 
+USER root
+RUN chown -R $USER /var/www
+
+USER $USER
 RUN composer dump-autoload --optimize
 
 ENTRYPOINT [ "php", "-S", "0.0.0.0:8000", "-t", "public"]
