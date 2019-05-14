@@ -21,7 +21,6 @@ RUN chown -R $USER ~/.composer/
 USER $USER
 
 COPY ./api/composer.json /var/www/html/composer.json
-COPY ./api/composer.lock /var/www/html/composer.lock
 
 WORKDIR /var/www/html
 
@@ -29,10 +28,10 @@ RUN composer install --no-scripts --no-autoloader
 
 COPY ./api /var/www/html
 
-USER root
-RUN chown -R $USER /var/www
+#USER root
+#RUN chown -R $USER /var/www
 
-USER $USER
+#USER $USER
 RUN composer dump-autoload --optimize
 
 ENTRYPOINT [ "php", "-S", "0.0.0.0:8000", "-t", "public"]

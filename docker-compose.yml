@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  mysql:
+  database:
     image: mysql:5.7
     container_name: api-lumen-mysql
     volumes:
@@ -13,6 +13,14 @@ services:
     restart: always
     networks:
       - private-network
+  # database:
+  #   image: mongo
+  #   container_name: database
+  #   volumes:
+  #     - "./docker/mongo/data:/data/db"
+  #   restart: always
+  #   networks:
+  #     - private-network
   php:
     build:
       dockerfile: ./docker/php/Dockerfile
@@ -22,13 +30,13 @@ services:
     container_name: api-lumen-php
     volumes:
       - ./api:/var/www/html
-      - /var/www/vendor
+      - /var/www/html/vendor
     ports:
       - "8000:8000"
     networks:
       - private-network
     depends_on:
-      - mysql
+      - database
 networks:
   private-network:
     name: private-network
